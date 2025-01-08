@@ -3,6 +3,7 @@ module org.foodust.searchforlog {
     requires javafx.fxml;
 
     requires org.controlsfx.controls;
+    requires static lombok;
 
     opens org.foodust.searchforlog to javafx.fxml;
     exports org.foodust.searchforlog;
