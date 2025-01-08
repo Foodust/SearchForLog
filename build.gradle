@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'org.foodust'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 repositories {
     mavenCentral()
@@ -26,7 +26,7 @@ tasks.withType(JavaCompile) {
 
 application {
     mainModule = 'org.foodust.searchforlog'
-    mainClass = 'org.foodust.searchforlog.HelloApplication'
+    mainClass = 'org.foodust.searchforlog.MainApplication'
 }
 
 javafx {
