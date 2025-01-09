@@ -40,7 +40,7 @@ public class SearchController {
     }
 
     private void updateSearchResults(List<File> files) {
-        ListView<String> searchResultListView = mainApp.getSearchResultListView();
+        ListView<String> searchResultListView = mainApp.getSearchResultView().getSearchResultListView();
         searchResultListView.getItems().clear();
         files.forEach(file -> searchResultListView.getItems().add(file.getAbsolutePath()));
     }

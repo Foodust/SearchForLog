@@ -13,6 +13,7 @@ import lombok.Getter;
 import org.foodust.searchforlog.common.CS;
 import org.foodust.searchforlog.controller.SearchController;
 import org.foodust.searchforlog.view.FolderSelectView;
+import org.foodust.searchforlog.view.SearchSelectView;
 
 import java.io.File;
 import java.util.Arrays;
@@ -20,10 +21,9 @@ import java.util.Arrays;
 @Getter
 public class MainApplication extends Application {
     private Stage primaryStage;
-    private FolderSelectView folderSelectView;
-    private SearchController searchController;
-    private ListView<String> folderContentListView;
-    private ListView<String> searchResultListView;
+    private final FolderSelectView folderSelectView = new FolderSelectView(this);
+    private final SearchSelectView searchResultView = new SearchSelectView(this);
+    private final SearchController searchController = new SearchController(this);
     private TextArea selectedFileContent;
     private File currentFolder;
 
@@ -38,10 +38,6 @@ public class MainApplication extends Application {
     }
 
     private void initializeViews() {
-        folderSelectView = new FolderSelectView(this);
-        searchController = new SearchController(this);
-        folderContentListView = new ListView<>();
-        searchResultListView = new ListView<>();
         selectedFileContent = new TextArea();
         selectedFileContent.setEditable(false);
         selectedFileContent.setWrapText(true);
@@ -56,31 +52,13 @@ public class MainApplication extends Application {
         VBox leftArea = new VBox(15);  // 간격 증가
         leftArea.setPrefWidth(600);     // 왼쪽 영역 고정 너비
 
-        // 폴더 목록 라벨
-        Label folderLabel = new Label(CS.LABEL_FOLDER_LIST.getValue());
-        folderLabel.setStyle(CS.DESIGN_BASE_FONT_SIZE.getValue() + CS.DESIGN_BASE_FONT_BOLD.getValue());
-        folderLabel.setMaxWidth(Double.MAX_VALUE);
-        folderLabel.setAlignment(Pos.CENTER);
-
-        // 폴더 경로 및 선택 버튼
-        HBox folderSelectionBox = new HBox(10);
-        folderSelectionBox.setAlignment(Pos.CENTER);
-        TextField folderPathField = new TextField();
-        folderPathField.setEditable(false);
-        folderPathField.setPrefWidth(450);
-        folderPathField.setStyle(CS.DESIGN_BASE_FONT_SIZE.getValue());
-
-        Button selectFolderBtn = new Button(CS.BUTTON_FOLDER_SELECT.getValue());
-        selectFolderBtn.setStyle(CS.DESIGN_BASE_FONT_SIZE.getValue());
-        selectFolderBtn.setPrefWidth(120);
-
-        folderSelectionBox.getChildren().addAll(folderPathField, selectFolderBtn);
+        folderSelectView.getFolderSelectionBox().getChildren().addAll(folderSelectView.getFolderContentListView(), folderSelectView.getSelectFolderButton());
 
         // 폴더 내용 목록
-        folderContentListView.setPrefSize(580, 500);
-        folderContentListView.setStyle(CS.DESIGN_BASE_FONT_SIZE.getValue());
+        folderSelectView.getFolderContentListView().setPrefSize(580, 500);
+        folderSelectView.getFolderContentListView().setStyle(CS.DESIGN_BASE_FONT_SIZE.getValue());
 
-        leftArea.getChildren().addAll(folderLabel, folderSelectionBox, folderContentListView);
+        leftArea.getChildren().addAll(folderSelectView.getFolderLabel(), folderSelectView.getFolderSelectionBox(), folderSelectView.getFolderContentListView());
 
         // 중앙/오른쪽 영역
         VBox rightArea = new VBox(15);  // 간격 증가
@@ -109,9 +87,9 @@ public class MainApplication extends Application {
         searchResultBox.setPrefWidth(580);
         Label searchResultLabel = new Label(CS.LABEL_SEARCH_RESULT.getValue());
         searchResultLabel.setStyle(CS.DESIGN_BASE_FONT_SIZE.getValue() + CS.DESIGN_BASE_FONT_BOLD.getValue());
-        searchResultListView.setPrefSize(580, 220);
-        searchResultListView.setStyle(CS.DESIGN_BASE_FONT_SIZE.getValue());
-        searchResultBox.getChildren().addAll(searchResultLabel, searchResultListView);
+        searchResultView.getSearchResultListView().setPrefSize(580, 220);
+        searchResultView.getSearchResultListView().setStyle(CS.DESIGN_BASE_FONT_SIZE.getValue());
+        searchResultBox.getChildren().addAll(searchResultLabel, searchResultView.getSearchResultListView());
 
         // 파일 내용
         VBox fileContentBox = new VBox(10);
@@ -132,13 +110,13 @@ public class MainApplication extends Application {
         mainLayout.setRight(rightArea);
 
         // 이벤트 핸들러
-        selectFolderBtn.setOnAction(e -> {
+        folderSelectView.getSelectFolderButton().setOnAction(e -> {
             File selectedFolder = folderSelectView.showDirectoryChooser();
             if (selectedFolder != null) {
                 currentFolder = selectedFolder;
-                folderPathField.setText(selectedFolder.getAbsolutePath());
-                updateFolderContent(selectedFolder);
-                searchResultListView.getItems().clear();
+                folderSelectView.getFolderPathField().setText(selectedFolder.getAbsolutePath());
+                folderSelectView.updateFolderContent(selectedFolder);
+                searchResultView.getSearchResultListView().getItems().clear();
                 selectedFileContent.clear();
             }
         });
@@ -150,7 +128,7 @@ public class MainApplication extends Application {
             }
         });
 
-        searchResultListView.getSelectionModel().selectedItemProperty().addListener(
+        searchResultView.getSearchResultListView().getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     if (newValue != null && !searchField.getText().isEmpty()) {
                         searchController.showFileContent(
@@ -164,18 +142,5 @@ public class MainApplication extends Application {
         Scene scene = new Scene(mainLayout, 1280, 720);
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
-
-    private void updateFolderContent(File folder) {
-        folderContentListView.getItems().clear();
-        if (folder.isDirectory()) {
-            File[] files = folder.listFiles();
-            if (files != null) {
-                Arrays.sort(files);  // 파일 이름순 정렬
-                for (File file : files) {
-                    folderContentListView.getItems().add(file.getName());
-                }
-            }
-        }
     }
 }
