@@ -10,6 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.Getter;
+import org.foodust.searchforlog.common.CS;
 import org.foodust.searchforlog.controller.SearchController;
 import org.foodust.searchforlog.view.FolderSelectView;
 
@@ -17,8 +18,6 @@ import java.io.File;
 import java.util.Arrays;
 
 @Getter
-// MainApplication.java
-// MainApplication.java
 public class MainApplication extends Application {
     private Stage primaryStage;
     private FolderSelectView folderSelectView;
@@ -31,7 +30,7 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("File Analyzer");
+        this.primaryStage.setTitle(CS.APP_TITLE.getValue());
         this.primaryStage.setResizable(false);
 
         initializeViews();
@@ -51,15 +50,15 @@ public class MainApplication extends Application {
     private void showMainView() {
         BorderPane mainLayout = new BorderPane();
         mainLayout.setPadding(new Insets(20));
-        mainLayout.setStyle("-fx-font-size: 14px;"); // 기본 폰트 크기 설정
+        mainLayout.setStyle(CS.DESIGN_BASE_FONT_SIZE.getValue()); // 기본 폰트 크기 설정
 
         // 왼쪽 영역 (폴더 관련)
         VBox leftArea = new VBox(15);  // 간격 증가
         leftArea.setPrefWidth(600);     // 왼쪽 영역 고정 너비
 
         // 폴더 목록 라벨
-        Label folderLabel = new Label("폴더 목록");
-        folderLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        Label folderLabel = new Label(CS.LABEL_FOLDER_LIST.getValue());
+        folderLabel.setStyle(CS.DESIGN_BASE_FONT_SIZE.getValue() + CS.DESIGN_BASE_FONT_BOLD.getValue());
         folderLabel.setMaxWidth(Double.MAX_VALUE);
         folderLabel.setAlignment(Pos.CENTER);
 
@@ -69,17 +68,17 @@ public class MainApplication extends Application {
         TextField folderPathField = new TextField();
         folderPathField.setEditable(false);
         folderPathField.setPrefWidth(450);
-        folderPathField.setStyle("-fx-font-size: 14px;");
+        folderPathField.setStyle(CS.DESIGN_BASE_FONT_SIZE.getValue());
 
-        Button selectFolderBtn = new Button("폴더 선택");
-        selectFolderBtn.setStyle("-fx-font-size: 14px;");
+        Button selectFolderBtn = new Button(CS.BUTTON_FOLDER_SELECT.getValue());
+        selectFolderBtn.setStyle(CS.DESIGN_BASE_FONT_SIZE.getValue());
         selectFolderBtn.setPrefWidth(120);
 
         folderSelectionBox.getChildren().addAll(folderPathField, selectFolderBtn);
 
         // 폴더 내용 목록
         folderContentListView.setPrefSize(580, 500);
-        folderContentListView.setStyle("-fx-font-size: 14px;");
+        folderContentListView.setStyle(CS.DESIGN_BASE_FONT_SIZE.getValue());
 
         leftArea.getChildren().addAll(folderLabel, folderSelectionBox, folderContentListView);
 
@@ -93,11 +92,11 @@ public class MainApplication extends Application {
         searchBox.setAlignment(Pos.CENTER);
         TextField searchField = new TextField();
         searchField.setPrefWidth(450);
-        searchField.setPromptText("검색할 문자열을 입력하세요");
-        searchField.setStyle("-fx-font-size: 14px;");
+        searchField.setPromptText(CS.PROMPT_SEARCH_FIELD.getValue());
+        searchField.setStyle(CS.DESIGN_BASE_FONT_SIZE.getValue());
 
-        Button searchBtn = new Button("검색");
-        searchBtn.setStyle("-fx-font-size: 14px;");
+        Button searchBtn = new Button(CS.BUTTON_SEARCH.getValue());
+        searchBtn.setStyle(CS.DESIGN_BASE_FONT_SIZE.getValue());
         searchBtn.setPrefWidth(120);
 
         searchBox.getChildren().addAll(searchField, searchBtn);
@@ -108,19 +107,19 @@ public class MainApplication extends Application {
         // 검색 결과 목록
         VBox searchResultBox = new VBox(10);
         searchResultBox.setPrefWidth(580);
-        Label searchResultLabel = new Label("검색 결과");
-        searchResultLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        Label searchResultLabel = new Label(CS.LABEL_SEARCH_RESULT.getValue());
+        searchResultLabel.setStyle(CS.DESIGN_BASE_FONT_SIZE.getValue() + CS.DESIGN_BASE_FONT_BOLD.getValue());
         searchResultListView.setPrefSize(580, 220);
-        searchResultListView.setStyle("-fx-font-size: 14px;");
+        searchResultListView.setStyle(CS.DESIGN_BASE_FONT_SIZE.getValue());
         searchResultBox.getChildren().addAll(searchResultLabel, searchResultListView);
 
         // 파일 내용
         VBox fileContentBox = new VBox(10);
         fileContentBox.setPrefWidth(580);
-        Label fileContentLabel = new Label("파일 내용");
-        fileContentLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        Label fileContentLabel = new Label(CS.LABEL_FILE_CONTENT.getValue());
+        fileContentLabel.setStyle(CS.DESIGN_BASE_FONT_SIZE.getValue() + CS.DESIGN_BASE_FONT_BOLD.getValue());
         selectedFileContent.setPrefSize(580, 220);
-        selectedFileContent.setStyle("-fx-font-size: 14px;");
+        selectedFileContent.setStyle(CS.DESIGN_BASE_FONT_SIZE.getValue());
         fileContentBox.getChildren().addAll(fileContentLabel, selectedFileContent);
 
         VBox bottomArea = new VBox(15);
@@ -179,5 +178,4 @@ public class MainApplication extends Application {
             }
         }
     }
-
 }

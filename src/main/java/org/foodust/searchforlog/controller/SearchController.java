@@ -18,7 +18,7 @@ import org.foodust.searchforlog.file.FileAnalyzer;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-// SearchController.java
+
 @RequiredArgsConstructor
 public class SearchController {
     private final MainApplication mainApp;
